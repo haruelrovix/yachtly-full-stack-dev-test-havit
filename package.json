@@ -6,14 +6,21 @@
   "author": "haruelrovix",
   "license": "MIT",
   "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
     "express": "^4.16.3",
+    "http-errors": "~1.6.2",
+    "morgan": "~1.9.0",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
+    "pug": "2.0.0-beta11",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.1.1"
   },
   "scripts": {
     "db:migrate": "sequelize db:migrate",
-    "db:seed": "sequelize db:seed:all"
+    "db:seed": "sequelize db:seed:all",
+    "debug:express": "set DEBUG=yachtly-express-app:* & yarn start:express",
+    "start:express": "node ./bin/www"
   }
 }
