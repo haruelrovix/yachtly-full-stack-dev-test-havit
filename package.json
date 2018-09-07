@@ -1,0 +1,11 @@
+{
+  "name": "yachtly-full-stack-dev-test-havit",
+  "version": "0.0.1",
+  "description": "Yachtly Full-Stack Developer Screening Test",
+  "main": "index.js",
+  "author": "haruelrovix",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
