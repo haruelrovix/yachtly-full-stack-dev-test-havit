@@ -13,6 +13,7 @@
     "sequelize-cli": "^4.1.1"
   },
   "scripts": {
-    "db:migrate": "sequelize db:migrate"
+    "db:migrate": "sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all"
   }
 }
