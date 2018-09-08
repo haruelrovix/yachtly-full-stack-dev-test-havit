@@ -27,7 +27,7 @@ router.post('/', function (req, res) {
 
   Users.create(user)
     .then(result => {
-      const user = new (result.get({ plain: true }), true);
+      const user = new UserDTO(result.get({ plain: true }), true);
 
       res.json({ user });
     }).catch(({ errors }) => {
