@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from 'react-router-dom';
 
-import UserForm from '../user/UserForm';
+import UserPage from '../user/UserPage';
 import UserList from '../user/UserList';
 
 // The Main component renders one of the three provided
@@ -13,7 +13,7 @@ const Main = () => (
   <main>
     <Switch>
       <Route exact path='/' component={UserList}/>
-      <Route path='/user/:id' component={UserForm}/>
+      <Route path='/user' component={UserPage}/>
     </Switch>
   </main>
 );

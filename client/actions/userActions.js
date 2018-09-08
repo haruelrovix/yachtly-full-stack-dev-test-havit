@@ -20,6 +20,25 @@ export const loadUsersSuccess = ({ users }) => {
 	};
 };
 
+export const saveUser = user => {
+	return (dispatch) => {
+		return userApi.saveUser(user)
+			.then(response => {
+				dispatch(saveUserSuccess(response));
+			})
+			.catch(error => {
+				throw(error);
+			});
+	};
+}
+
+export const saveUserSuccess = ({ user }) => {
+	return {
+		type: types.SAVE_USER_SUCCESS, 
+		user
+	};
+};
+
 export const updateUser = user => {
 	return (dispatch) => {
 		return userApi.updateUser(user)

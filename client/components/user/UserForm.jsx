@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as userActions from '../../actions/userActions';
 
 import User from './user';
-import InputForm from './InputForm';
+import InputForm from '../input/InputForm';
 
 class UserItem extends React.PureComponent {
   constructor(props) {
@@ -14,13 +14,29 @@ class UserItem extends React.PureComponent {
 
     this.state = {
       user: new User(props.user),
-      isSaving: false
+      isSaving: false,
+      isDisplayed: !!props.match.params.id
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user !== this.props.user && nextProps.user.id) {
-      this.setState({ user: nextProps.user, isSaving: false });
+    if (nextProps.user !== this.props.user) {
+      let user;
+      let isDisplayed;
+      
+      if (nextProps.users.length !== this.props.users.length) {
+        user = new User(nextProps.users[nextProps.users.length - 1]);
+        isDisplayed = true;
+      } else {
+        user = new User(nextProps.user);
+        isDisplayed = !!nextProps.match.params.id;
+      }
+
+      this.setState({
+        user,
+        isSaving: false,
+        isDisplayed
+      });
     }
   }
 
@@ -35,15 +51,20 @@ class UserItem extends React.PureComponent {
 
     this.setState({ isSaving: true });
 
-    this.props.actions.updateUser(this.state.user);
+    const { actions: { saveUser, updateUser }, match: { params } } = this.props;
+    if (params.id) {
+      updateUser(this.state.user)
+    } else {
+      saveUser(this.state.user)
+    }
   }
 
   render() {
-    const { user, isSaving } = this.state;
+    const { user, isSaving, isDisplayed } = this.state;
 
     return (
       <Form>
-        <InputForm label="ID" name="id" user={user} handleOnChange={this.handleOnChange} disabled />
+        {isDisplayed && <InputForm label="ID" name="id" user={user} handleOnChange={this.handleOnChange} disabled />}
         <InputForm label="Name" name="name" user={user} handleOnChange={this.handleOnChange} />
         <InputForm label="Email" name="email" type="email" user={user} handleOnChange={this.handleOnChange} />
         <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
@@ -65,7 +86,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {}
+    users: state.users,
+    user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {}
 	};
 };
 

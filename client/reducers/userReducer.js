@@ -6,6 +6,9 @@ const userReducer = (state = initialState.users, action) => {
 		case types.LOAD_USERS_SUCCESS:
 			return action.users;
 
+		case types.SAVE_USER_SUCCESS:
+			return [ ...state, action.user ];
+
 		case types.UPDATE_USER_SUCCESS:
 			return state.map(user => {
 				return user.id === action.user.id ? action.user : user
