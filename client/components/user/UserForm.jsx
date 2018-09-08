@@ -14,6 +14,8 @@ class UserItem extends React.PureComponent {
     }
   }
 
+  goBack = () => this.props.history.goBack();
+
   editUser = () => this.props.editUser(this.props.user.id);
 
   handleOnChange = target => {
@@ -32,7 +34,7 @@ class UserItem extends React.PureComponent {
         <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
         <FormGroup>
           <Button color="primary" size="sm" onClick={this.editUser}>Save</Button>{' '}
-          <Button color="primary" size="sm">Cancel</Button>
+          <Button color="primary" size="sm" onClick={this.goBack}>Cancel</Button>
         </FormGroup>
       </Form>
     );
