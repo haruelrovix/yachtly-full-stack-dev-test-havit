@@ -53,4 +53,20 @@ router.put('/:id', function (req, res) {
     })
 })
 
+/* DELET user. */
+router.delete('/:id', function (req, res) {
+  const id = Number(req.params.id);
+
+  Users.destroy({ where: { id } })
+    .then(result => {
+      if (result === 0) {
+        return res.status(400).send({ error: USER_NOT_FOUND });
+      }
+
+      res.status(200).send()
+    }).catch(({ errors }) => {
+      res.status(400).send(constructError(errors));
+    })
+})
+
 module.exports = router;
