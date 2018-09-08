@@ -13,7 +13,14 @@ class UserItem extends React.PureComponent {
     super(props);
 
     this.state = {
-      user: new User(props.user)
+      user: new User(props.user),
+      isSaving: false
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user !== this.props.user && nextProps.user.id) {
+      this.setState({ user: nextProps.user, isSaving: false });
     }
   }
 
@@ -26,11 +33,13 @@ class UserItem extends React.PureComponent {
   saveUser = e => {
     e.preventDefault();
 
+    this.setState({ isSaving: true });
+
     this.props.actions.updateUser(this.state.user);
   }
 
   render() {
-    const { user } = this.state;
+    const { user, isSaving } = this.state;
 
     return (
       <Form>
@@ -40,7 +49,7 @@ class UserItem extends React.PureComponent {
         <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
         <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
         <FormGroup>
-          <Button color="primary" size="sm" onClick={this.saveUser}>Save</Button>{' '}
+          {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser}>Save</Button>}{' '}
           <Button color="primary" size="sm" onClick={this.goBack}>Cancel</Button>
         </FormGroup>
       </Form>
