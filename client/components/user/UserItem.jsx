@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 
 class UserItem extends React.PureComponent {
-  editUser = () => this.props.editUser(this.props.user.id);
+  editUser = () => this.props.history.push(`/user/${this.props.user.id}`);
 
   render() {
     const { user } = this.props;
@@ -23,4 +24,4 @@ class UserItem extends React.PureComponent {
   }
 }
 
-export default UserItem;
+export default withRouter(UserItem);
