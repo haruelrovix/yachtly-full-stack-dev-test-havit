@@ -2,6 +2,9 @@ import React from 'react';
 import { Button, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import * as userActions from '../../actions/userActions';
+
 import User from './user';
 import InputForm from './InputForm';
 
@@ -16,11 +19,15 @@ class UserItem extends React.PureComponent {
 
   goBack = () => this.props.history.goBack();
 
-  editUser = () => this.props.editUser(this.props.user.id);
-
   handleOnChange = target => {
     this.setState({ user: { ...this.state.user, [target.name]: target.value } })
   };
+
+  saveUser = e => {
+    e.preventDefault();
+
+    this.props.actions.updateUser(this.state.user);
+  }
 
   render() {
     const { user } = this.state;
@@ -33,7 +40,7 @@ class UserItem extends React.PureComponent {
         <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
         <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
         <FormGroup>
-          <Button color="primary" size="sm" onClick={this.editUser}>Save</Button>{' '}
+          <Button color="primary" size="sm" onClick={this.saveUser}>Save</Button>{' '}
           <Button color="primary" size="sm" onClick={this.goBack}>Cancel</Button>
         </FormGroup>
       </Form>
@@ -41,10 +48,16 @@ class UserItem extends React.PureComponent {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		actions: bindActionCreators(userActions, dispatch)
+	};
+};
+
 const mapStateToProps = (state, ownProps) => {
 	return {
 		user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {}
 	};
 };
 
-export default withRouter(connect(mapStateToProps)(UserItem));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserItem));
