@@ -5,9 +5,12 @@ const Users = require('../models').User;
 const UserDTO = require('../helpers/user');
 
 const DEFAULT_ERROR_MESSAGE = 'Something went wrong';
+const USER_NOT_FOUND = 'User not found';
+
+const constructError = errors => ({ error: errors && errors.length > 0 && errors[0].message || DEFAULT_ERROR_MESSAGE });
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
+router.get('/', function (_, res) {
   Users.findAll()
     .then(result => {
       const users = result.map(node => new UserDTO(node.get({ plain: true })));
@@ -18,6 +21,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
+/* POST user. */
 router.post('/', function (req, res) {
   const user = new UserDTO(req.body);
 
@@ -27,10 +31,26 @@ router.post('/', function (req, res) {
 
       res.json({ user });
     }).catch(({ errors }) => {
-      const errorMessage = errors && errors.length > 0 && errors[0].message || DEFAULT_ERROR_MESSAGE;
-
-      res.status(400).send({ error: errorMessage });
+      res.status(400).send(constructError(errors));
     });
+})
+
+/* PUT user. */
+router.put('/:id', function (req, res) {
+  const id = Number(req.params.id);
+  const user = new UserDTO(req.body);
+  user.id = id;
+
+  Users.update(user, { where: { id } })
+    .then(result => {
+      if (result && result.length > 0 && result[0] === 0) {
+        return res.status(400).send({ error: USER_NOT_FOUND });
+      }
+
+      res.status(204).send()
+    }).catch(({ errors }) => {
+      res.status(400).send(constructError(errors));
+    })
 })
 
 module.exports = router;
