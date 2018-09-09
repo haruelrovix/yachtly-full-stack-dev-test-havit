@@ -77,7 +77,7 @@ class UserItem extends React.PureComponent {
         <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
         <FormGroup>
           {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser}>Save</Button>}{' '}
-          <Button color="primary" size="sm" onClick={this.deleteUser}>Delete</Button>
+          {isDisplayed && <Button color="primary" size="sm" onClick={this.deleteUser}>Delete</Button>}
         </FormGroup>
       </Form>
     );
