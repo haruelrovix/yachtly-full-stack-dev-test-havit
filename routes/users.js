@@ -11,7 +11,7 @@ const constructError = errors => ({ error: errors && errors.length > 0 && errors
 
 /* GET users listing. */
 router.get('/', function (_, res) {
-  Users.findAll()
+  Users.findAll({ order: [['id', 'ASC']] })
     .then(result => {
       const users = result.map(node => new UserDTO(node.get({ plain: true })));
 
