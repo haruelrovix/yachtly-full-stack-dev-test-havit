@@ -9,6 +9,9 @@ import User from './user';
 import InputForm from '../input/InputForm';
 import style from './style';
 
+const email = 'email';
+const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 class UserItem extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -16,7 +19,8 @@ class UserItem extends React.PureComponent {
     this.state = {
       user: new User(props.user),
       isDisplayed: !!props.match.params.id,
-      isSaving: false
+      isSaving: false,
+      validate : {}
     }
   }
 
@@ -51,7 +55,21 @@ class UserItem extends React.PureComponent {
 
   handleOnChange = target => {
     this.setState({ user: { ...this.state.user, [target.name]: target.value } })
-  };
+  }
+
+  handleOnBlur = target => {
+    if (target.name === email) {
+      const validate = { ...this.state.validate }
+
+      if (emailRegex.test(target.value)) {
+        validate.emailState = 'has-success'
+      } else {
+        validate.emailState = 'has-danger'
+      }
+
+      this.setState({ validate })
+    }
+  }
 
   saveUser = e => {
     e.preventDefault();
@@ -67,7 +85,8 @@ class UserItem extends React.PureComponent {
   }
 
   render() {
-    const { user, isSaving, isDisplayed } = this.state;
+    const { user, isSaving, isDisplayed, validate } = this.state;
+    const invalidEmail = validate.emailState === 'has-danger';
 
     return (
       <div className="container">
@@ -76,7 +95,16 @@ class UserItem extends React.PureComponent {
             <Form style={style.form}>
               {isDisplayed && <InputForm label="ID" name="id" user={user} handleOnChange={this.handleOnChange} disabled />}
               <InputForm label="Name" name="name" user={user} handleOnChange={this.handleOnChange} />
-              <InputForm label="Email" name="email" type="email" user={user} handleOnChange={this.handleOnChange} />
+              <InputForm
+                label="Email"
+                name="email"
+                type="email"
+                user={user}
+                handleOnChange={this.handleOnChange}
+                handleOnBlur={this.handleOnBlur}
+                valid={validate.emailState === 'has-success'}
+                invalid={invalidEmail}
+              />
               <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
               <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
               <FormGroup>
