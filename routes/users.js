@@ -11,7 +11,7 @@ const constructError = errors => ({ error: errors && errors.length > 0 && errors
 
 /* GET users listing. */
 router.get('/', function (_, res) {
-  Users.findAll()
+  Users.findAll({ order: [['id', 'ASC']] })
     .then(result => {
       const users = result.map(node => new UserDTO(node.get({ plain: true })));
 
@@ -23,11 +23,11 @@ router.get('/', function (_, res) {
 
 /* POST user. */
 router.post('/', function (req, res) {
-  const user = new UserDTO(req.body);
+  const user = new UserDTO(req.body.user);
 
   Users.create(user)
     .then(result => {
-      const user = new (result.get({ plain: true }), true);
+      const user = new UserDTO(result.get({ plain: true }), true);
 
       res.json({ user });
     }).catch(({ errors }) => {
@@ -35,25 +35,45 @@ router.post('/', function (req, res) {
     });
 })
 
-/* PUT user. */
-router.put('/:id', function (req, res) {
+/* GET user. */
+router.get('/:id', function (req, res) {
   const id = Number(req.params.id);
-  const user = new UserDTO(req.body);
-  user.id = id;
 
-  Users.update(user, { where: { id } })
+  Users.findOne({ where: { id } })
     .then(result => {
       if (result && result.length > 0 && result[0] === 0) {
         return res.status(400).send({ error: USER_NOT_FOUND });
       }
 
-      res.status(204).send()
+      const user = new UserDTO(result.get({ plain: true }), true);
+
+      res.json({ user });
     }).catch(({ errors }) => {
       res.status(400).send(constructError(errors));
     })
 })
 
-/* DELET user. */
+/* PUT user. */
+router.put('/:id', function (req, res) {
+  const id = Number(req.params.id);
+  const user = new UserDTO(req.body.user);
+  user.id = id;
+
+  Users.update(user, { where: { id }, returning: true })
+    .then(result => {
+      if (result && result.length > 0 && result[0] === 0) {
+        return res.status(400).send({ error: USER_NOT_FOUND });
+      }
+
+      const user = new UserDTO(result[1][0].get(), true);
+
+      res.json({ user });
+    }).catch(({ errors }) => {
+      res.status(400).send(constructError(errors));
+    })
+})
+
+/* DELETE user. */
 router.delete('/:id', function (req, res) {
   const id = Number(req.params.id);
 
