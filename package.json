@@ -17,6 +17,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
     "css-loader": "0.28.7",
     "debug": "~2.6.9",
     "dotenv": "4.0.0",
@@ -67,6 +68,7 @@
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed:all",
     "debug:express": "cross-env DEBUG=yachtly-express-app:* node ./bin/www",
+    "start:dev": "concurrently \"yarn debug:express\" \"yarn start:react\"",
     "start:express": "node ./bin/www",
     "start:react": "cross-env PORT=3001 node scripts/start.js"
   },
@@ -113,6 +115,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "concurrently": "^4.0.1",
     "cross-env": "^5.2.0"
   }
 }

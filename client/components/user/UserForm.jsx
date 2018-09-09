@@ -9,6 +9,12 @@ import User from './user';
 import InputForm from '../input/InputForm';
 import style from './style';
 
+const name = 'name';
+const email = 'email';
+const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const success = 'has-success';
+const danger = 'has-danger';
+
 class UserItem extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -16,7 +22,8 @@ class UserItem extends React.PureComponent {
     this.state = {
       user: new User(props.user),
       isDisplayed: !!props.match.params.id,
-      isSaving: false
+      isSaving: false,
+      validate : {}
     }
   }
 
@@ -51,23 +58,41 @@ class UserItem extends React.PureComponent {
 
   handleOnChange = target => {
     this.setState({ user: { ...this.state.user, [target.name]: target.value } })
-  };
+  }
+
+  handleOnBlur = target => {
+    const validate = { ...this.state.validate }
+
+    if (target.name === email) {
+      validate.emailState = emailRegex.test(target.value) ? success : danger;
+    } else if (target.name === name) {
+      validate.nameState = target.value.length === 0 ? danger : success;
+    }
+
+    this.setState({ validate })
+  }
 
   saveUser = e => {
     e.preventDefault();
 
-    this.setState({ isSaving: true });
+    // Validate form
+    const hasDanger = Object.entries(this.state.validate).find(state => state[1] === danger);
 
-    const { actions: { saveUser, updateUser }, match: { params } } = this.props;
-    if (params.id) {
-      updateUser(this.state.user)
-    } else {
-      saveUser(this.state.user)
+    // Submit form IF it has no field error
+    if (hasDanger.length === 0) {
+      this.setState({ isSaving: true });
+
+      const { actions: { saveUser, updateUser }, match: { params } } = this.props;
+      if (params.id) {
+        updateUser(this.state.user)
+      } else {
+        saveUser(this.state.user)
+      }
     }
   }
 
   render() {
-    const { user, isSaving, isDisplayed } = this.state;
+    const { user, isSaving, isDisplayed, validate } = this.state;
 
     return (
       <div className="container">
@@ -75,8 +100,27 @@ class UserItem extends React.PureComponent {
           <div className="col-md-8 border">
             <Form style={style.form}>
               {isDisplayed && <InputForm label="ID" name="id" user={user} handleOnChange={this.handleOnChange} disabled />}
-              <InputForm label="Name" name="name" user={user} handleOnChange={this.handleOnChange} />
-              <InputForm label="Email" name="email" type="email" user={user} handleOnChange={this.handleOnChange} />
+              <InputForm
+                label="Name"
+                name={name}
+                user={user}
+                handleOnChange={this.handleOnChange}
+                handleOnBlur={this.handleOnBlur}
+                invalid={validate.nameState === danger}
+                valid={validate.nameState === success}
+                message="Name is required."
+              />
+              <InputForm
+                label="Email"
+                name={email}
+                type="email"
+                user={user}
+                handleOnChange={this.handleOnChange}
+                handleOnBlur={this.handleOnBlur}
+                valid={validate.emailState === success}
+                invalid={validate.emailState === danger}
+                message="Please input a correct email."
+              />
               <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
               <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
               <FormGroup>

@@ -8,7 +8,7 @@ class UserList extends React.PureComponent {
 
   render() {
     return (
-      <Table>
+      <Table hover striped>
         <thead>
           <tr>
             <th>ID</th>
