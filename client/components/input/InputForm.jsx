@@ -11,7 +11,7 @@ class InputForm extends React.PureComponent {
   }
 
   render() {
-    const { user, label, name, type, disabled, valid, invalid } = this.props;
+    const { user, label, name, type, disabled, valid, invalid, message } = this.props;
 
     return (
       <FormGroup>
@@ -26,7 +26,7 @@ class InputForm extends React.PureComponent {
           valid={valid}
           invalid={invalid}
         />
-        <FormFeedback invalid='true'>Please input a correct {name}.</FormFeedback>
+        <FormFeedback invalid='true'>{message}</FormFeedback>
       </FormGroup>
     );
   }
