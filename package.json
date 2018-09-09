@@ -64,6 +64,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "build:production": "cross-env API_HOST=https://yachtly-api.appspot.com/api node scripts/build.js",
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed:all",
     "debug:express": "cross-env DEBUG=yachtly-express-app:* node ./bin/www",
@@ -113,6 +114,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "cross-env": "^5.2.0"
   }
 }
