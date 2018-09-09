@@ -7,6 +7,7 @@ import * as userActions from '../../actions/userActions';
 
 import User from './user';
 import InputForm from '../input/InputForm';
+import style from './style';
 
 class UserItem extends React.PureComponent {
   constructor(props) {
@@ -24,7 +25,7 @@ class UserItem extends React.PureComponent {
       let user;
       let isDisplayed;
       
-      if (nextProps.users.length !== this.props.users.length) {
+      if (nextProps.users.length !== this.props.users.length && this.props.users.length > 0) {
         user = new User(nextProps.users[nextProps.users.length - 1]);
         isDisplayed = true;
       } else {
@@ -69,17 +70,23 @@ class UserItem extends React.PureComponent {
     const { user, isSaving, isDisplayed } = this.state;
 
     return (
-      <Form>
-        {isDisplayed && <InputForm label="ID" name="id" user={user} handleOnChange={this.handleOnChange} disabled />}
-        <InputForm label="Name" name="name" user={user} handleOnChange={this.handleOnChange} />
-        <InputForm label="Email" name="email" type="email" user={user} handleOnChange={this.handleOnChange} />
-        <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
-        <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
-        <FormGroup>
-          {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser}>Save</Button>}{' '}
-          {isDisplayed && <Button color="primary" size="sm" onClick={this.deleteUser}>Delete</Button>}
-        </FormGroup>
-      </Form>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-8 border">
+            <Form style={style.form}>
+              {isDisplayed && <InputForm label="ID" name="id" user={user} handleOnChange={this.handleOnChange} disabled />}
+              <InputForm label="Name" name="name" user={user} handleOnChange={this.handleOnChange} />
+              <InputForm label="Email" name="email" type="email" user={user} handleOnChange={this.handleOnChange} />
+              <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
+              <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
+              <FormGroup>
+                {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser} style={style.button}>Save</Button>}
+                {isDisplayed && <Button color="primary" size="sm" onClick={this.deleteUser} style={style.button}>Delete</Button>}
+              </FormGroup>
+            </Form>
+          </div>
+        </div>
+      </div>
     );
   }
 }

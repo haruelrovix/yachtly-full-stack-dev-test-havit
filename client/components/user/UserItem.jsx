@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../../actions/userActions';
-
-const buttonStyle = { marginRight: '5px', marginBottom: '5px' };
+import style from './style';
 
 class UserItem extends React.PureComponent {
   editUser = () => this.props.history.push(`/user/${this.props.user.id}`);
@@ -23,8 +22,8 @@ class UserItem extends React.PureComponent {
         <td>{user.phoneNumber}</td>
         <td>{user.address}</td>
         <td>
-          <Button color="primary" size="sm" onClick={this.editUser} style={buttonStyle}>Edit</Button>
-          <Button color="primary" size="sm" onClick={this.deleteUser} style={buttonStyle}>Delete</Button>
+          <Button color="primary" size="sm" onClick={this.editUser} style={style.button}>Edit</Button>
+          <Button color="primary" size="sm" onClick={this.deleteUser} style={style.button}>Delete</Button>
         </td>
       </tr>
     );
