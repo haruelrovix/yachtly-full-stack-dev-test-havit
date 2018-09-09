@@ -14,8 +14,8 @@ class UserItem extends React.PureComponent {
 
     this.state = {
       user: new User(props.user),
-      isSaving: false,
-      isDisplayed: !!props.match.params.id
+      isDisplayed: !!props.match.params.id,
+      isSaving: false
     }
   }
 
@@ -40,7 +40,13 @@ class UserItem extends React.PureComponent {
     }
   }
 
-  goBack = () => this.props.history.goBack();
+  deleteUser = e => {
+    e.preventDefault();
+
+    this.props.history.goBack();
+
+    this.props.actions.deleteUser(this.state.user);
+  }
 
   handleOnChange = target => {
     this.setState({ user: { ...this.state.user, [target.name]: target.value } })
@@ -71,7 +77,7 @@ class UserItem extends React.PureComponent {
         <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
         <FormGroup>
           {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser}>Save</Button>}{' '}
-          <Button color="primary" size="sm" onClick={this.goBack}>Cancel</Button>
+          <Button color="primary" size="sm" onClick={this.deleteUser}>Delete</Button>
         </FormGroup>
       </Form>
     );

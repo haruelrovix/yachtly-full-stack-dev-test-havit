@@ -45,6 +45,19 @@ class UserApi {
 				return error;
 			});
 	};
+	
+	static deleteUser(user) {
+		const request = new Request(`${process.env.API_HOST}/users/${user.id}`, {
+			method: 'DELETE'
+		});
+		
+		return fetch(request)
+			.then(response => {
+				return response;
+			}).catch(error => {
+				return error;
+			});
+	};
 }
 
 export default UserApi;

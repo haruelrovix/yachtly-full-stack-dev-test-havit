@@ -14,6 +14,9 @@ const userReducer = (state = initialState.users, action) => {
 				return user.id === action.user.id ? action.user : user
 			});
 
+		case types.DELETE_USER_SUCCESS:
+			return state.filter(user => user.id !== action.user.id);
+
 		default:
 			return state;
 	}

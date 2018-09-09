@@ -57,3 +57,24 @@ export const updateUserSuccess = ({ user }) => {
 		user
 	};
 };
+
+export const deleteUser = user => {
+	return (dispatch) => {
+		return userApi.deleteUser(user)
+			.then(() => {
+				dispatch(deleteUserSuccess(user));
+
+				return;
+			})
+			.catch(error => {
+				throw(error);
+			});
+	};
+};
+
+export const deleteUserSuccess = user => {
+	return {
+		type: types.DELETE_USER_SUCCESS, 
+		user
+	};
+};
