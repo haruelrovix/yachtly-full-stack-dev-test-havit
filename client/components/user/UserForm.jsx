@@ -75,11 +75,18 @@ class UserItem extends React.PureComponent {
   saveUser = e => {
     e.preventDefault();
 
+    const validate = { ...this.state.validate }
+
+    if (!this.state.user.name) validate.nameState = danger;
+    if (!this.state.user.email) validate.emailState = danger;
+
+    this.setState({ validate });
+
     // Validate form
-    const hasDanger = Object.entries(this.state.validate).find(state => state[1] === danger);
+    const hasDanger = Object.entries(validate).find(state => state[1] === danger);
 
     // Submit form IF it has no field error
-    if (hasDanger.length === 0) {
+    if (!hasDanger) {
       this.setState({ isSaving: true });
 
       const { actions: { saveUser, updateUser }, match: { params } } = this.props;
