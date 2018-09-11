@@ -80,15 +80,18 @@ export const updateUserSuccess = ({ user }) => {
 
 export const deleteUser = (user, history) => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.deleteUser(user)
 			.then(() => {
 				dispatch(deleteUserSuccess(user));
+				dispatch(toggleLoadingSpinner(false));
 
-				history.push('/');
-
+				if (history) history.push('/');
 				return;
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};
