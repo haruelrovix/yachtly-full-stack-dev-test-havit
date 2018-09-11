@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import configureStore from './store/configureStore';
 import { loadUsers } from './actions/userActions';
 
+import ErrorMessage from './components/alert/ErrorMessage';
 import Header from './components/header/Header';
 import Main from './components/main/Main';
 
@@ -19,6 +20,7 @@ class App extends Component {
         <BrowserRouter>
           <div>
             <Header />
+            <ErrorMessage />
             <Main />
           </div>
         </BrowserRouter>

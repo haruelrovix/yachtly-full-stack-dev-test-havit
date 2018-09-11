@@ -65,11 +65,12 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "build": "node scripts/build.js",
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed:all",
     "debug:express": "cross-env DEBUG=yachtly-express-app:* node ./bin/www",
+    "start": "node ./bin/www",
     "start:dev": "concurrently \"yarn debug:express\" \"yarn start:react\"",
-    "start:express": "node ./bin/www",
     "start:react": "cross-env PORT=3001 node scripts/start.js"
   },
   "jest": {

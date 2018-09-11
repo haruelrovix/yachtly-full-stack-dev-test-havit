@@ -1,3 +1,9 @@
 export default {
-	users: []
+	users: [],
+	modal: {
+		isDisplayed: false
+	},
+	error: {
+		isDisplayed: false
+	}
 };

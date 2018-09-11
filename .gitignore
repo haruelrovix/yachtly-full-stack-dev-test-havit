@@ -29,3 +29,12 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# React build folder
+build
+
+# Env file, currently used for deployment
+.env*
+
+# GCP deployment credentials
+app.yaml

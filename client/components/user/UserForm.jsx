@@ -3,8 +3,9 @@ import { Button, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import * as userActions from '../../actions/userActions';
 
+import * as userActions from '../../actions/userActions';
+import { toggleModal } from '../../actions/modalActions';
 import User from './user';
 import InputForm from '../input/InputForm';
 import style from './style';
@@ -28,7 +29,7 @@ class UserItem extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user !== this.props.user) {
+    if (nextProps.user !== this.props.user && !nextProps.error.isDisplayed && !this.props.error.isDisplayed) {
       let user;
       let isDisplayed;
       
@@ -43,17 +44,32 @@ class UserItem extends React.PureComponent {
       this.setState({
         user,
         isSaving: false,
-        isDisplayed
+        isDisplayed,
+        validate: {}
       });
+    } else if (nextProps.error.isDisplayed && nextProps.error.isDisplayed !== this.props.error.isDisplayed) {
+      const { error } = nextProps.error;
+      if (/email/i.test(error)) {
+        const validate = { ...this.state.validate };
+        validate.emailState = danger;
+
+        this.setState({ validate, isSaving: false });
+      }
     }
   }
 
-  deleteUser = e => {
-    e.preventDefault();
-
+  deleteUser = () => {
     this.props.history.goBack();
 
-    this.props.actions.deleteUser(this.state.user);
+    this.props.actions.deleteUser(this.state.user, this.props.history);
+  }
+
+  showModal = e => {
+    e.preventDefault();
+
+    this.props.toggleModal({
+      onConfirm: this.deleteUser
+    });
   }
 
   handleOnChange = target => {
@@ -93,7 +109,7 @@ class UserItem extends React.PureComponent {
       if (params.id) {
         updateUser(this.state.user)
       } else {
-        saveUser(this.state.user)
+        saveUser(this.state.user, this.props.history)
       }
     }
   }
@@ -132,7 +148,7 @@ class UserItem extends React.PureComponent {
               <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
               <FormGroup>
                 {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser} style={style.button}>Save</Button>}
-                {isDisplayed && <Button color="primary" size="sm" onClick={this.deleteUser} style={style.button}>Delete</Button>}
+                {isDisplayed && <Button color="primary" size="sm" onClick={this.showModal} style={style.button}>Delete</Button>}
               </FormGroup>
             </Form>
           </div>
@@ -143,16 +159,18 @@ class UserItem extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => {
-	return {
-		actions: bindActionCreators(userActions, dispatch)
-	};
+  return {
+    actions: bindActionCreators(userActions, dispatch),
+    toggleModal: bindActionCreators(toggleModal, dispatch)
+  };
 };
 
 const mapStateToProps = (state, ownProps) => {
-	return {
+  return {
     users: state.users,
-    user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {}
-	};
+    user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {},
+    error: state.error
+  };
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserItem));

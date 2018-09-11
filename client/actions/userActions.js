@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import userApi from '../api/userApi';
+import { toggleErrorMessage } from './errorActions';
 
 export const loadUsers = () => {
 	return (dispatch) => {
@@ -20,11 +21,19 @@ export const loadUsersSuccess = ({ users }) => {
 	};
 };
 
-export const saveUser = user => {
+export const saveUser = (user, history) => {
 	return (dispatch) => {
 		return userApi.saveUser(user)
 			.then(response => {
-				dispatch(saveUserSuccess(response));
+				const action = response.error ? toggleErrorMessage : saveUserSuccess;
+
+				if (response.error) {
+					response.user = user;
+				} else {
+					history.push(`/user/${response.user.id}`);
+				}
+
+				dispatch(action(response));
 			})
 			.catch(error => {
 				throw(error);
@@ -58,11 +67,13 @@ export const updateUserSuccess = ({ user }) => {
 	};
 };
 
-export const deleteUser = user => {
+export const deleteUser = (user, history) => {
 	return (dispatch) => {
 		return userApi.deleteUser(user)
 			.then(() => {
 				dispatch(deleteUserSuccess(user));
+
+				history.push('/');
 
 				return;
 			})
