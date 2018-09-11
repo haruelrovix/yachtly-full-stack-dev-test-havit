@@ -34,7 +34,7 @@ node_modules
 build
 
 # Env file, currently used for deployment
-.env
+.env*
 
 # GCP deployment credentials
 app.yaml

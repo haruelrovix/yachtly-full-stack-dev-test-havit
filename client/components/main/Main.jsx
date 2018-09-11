@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import UserPage from '../user/UserPage';
 import UserList from '../user/UserList';
+import ModalDialog from '../modal/ModalDialog';
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -15,6 +16,7 @@ const Main = () => (
       <Route exact path='/' component={UserList}/>
       <Route path='/user' component={UserPage}/>
     </Switch>
+    <ModalDialog />
   </main>
 );
 
