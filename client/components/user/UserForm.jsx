@@ -3,9 +3,9 @@ import { Button, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+
 import * as userActions from '../../actions/userActions';
 import { toggleModal } from '../../actions/modalActions';
-
 import User from './user';
 import InputForm from '../input/InputForm';
 import style from './style';
