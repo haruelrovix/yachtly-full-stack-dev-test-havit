@@ -52,7 +52,13 @@ export const updateUser = user => {
 	return (dispatch) => {
 		return userApi.updateUser(user)
 			.then(response => {
-				dispatch(updateUserSuccess(response));
+				const action = response.error ? toggleErrorMessage : updateUserSuccess;
+
+				if (response.error) {
+						response.user = user;
+				}
+
+				dispatch(action(response));
 			})
 			.catch(error => {
 				throw(error);
