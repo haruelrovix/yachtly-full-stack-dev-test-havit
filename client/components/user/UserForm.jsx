@@ -61,7 +61,7 @@ class UserItem extends React.PureComponent {
   deleteUser = () => {
     this.props.history.goBack();
 
-    this.props.actions.deleteUser(this.state.user);
+    this.props.actions.deleteUser(this.state.user, this.props.history);
   }
 
   showModal = e => {

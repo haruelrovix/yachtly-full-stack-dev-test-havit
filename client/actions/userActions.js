@@ -67,11 +67,13 @@ export const updateUserSuccess = ({ user }) => {
 	};
 };
 
-export const deleteUser = user => {
+export const deleteUser = (user, history) => {
 	return (dispatch) => {
 		return userApi.deleteUser(user)
 			.then(() => {
 				dispatch(deleteUserSuccess(user));
+
+				history.push('/');
 
 				return;
 			})
