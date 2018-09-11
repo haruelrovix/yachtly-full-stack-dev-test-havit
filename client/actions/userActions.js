@@ -1,14 +1,19 @@
 import * as types from './actionTypes';
 import userApi from '../api/userApi';
 import { toggleErrorMessage } from './errorActions';
+import { toggleLoadingSpinner } from './loadingActions';
 
 export const loadUsers = () => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.getAllUsers()
 			.then(response => {
+				dispatch(toggleLoadingSpinner(false));
 				dispatch(loadUsersSuccess(response));
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};

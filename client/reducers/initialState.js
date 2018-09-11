@@ -1,5 +1,8 @@
 export default {
 	users: [],
+	loading: {
+		isDisplayed: false
+	},
 	modal: {
 		isDisplayed: false
 	},
