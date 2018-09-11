@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import userApi from '../api/userApi';
+import { toggleErrorMessage } from './errorActions';
 
 export const loadUsers = () => {
 	return (dispatch) => {
@@ -24,7 +25,9 @@ export const saveUser = user => {
 	return (dispatch) => {
 		return userApi.saveUser(user)
 			.then(response => {
-				dispatch(saveUserSuccess(response));
+				const action = response.error ? toggleErrorMessage : saveUserSuccess;
+				if (response.error) response.user = user;
+				dispatch(action(response));
 			})
 			.catch(error => {
 				throw(error);
