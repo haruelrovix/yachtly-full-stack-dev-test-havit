@@ -15,3 +15,17 @@
 
 # Node.js dependencies:
 node_modules/
+
+# Development
+build/
+client/
+scripts/
+.vscode/
+*.md
+
+# Logs
+*.log
+
+# Ignore .env.{ENV} but don't .env
+.env*
+!.env
