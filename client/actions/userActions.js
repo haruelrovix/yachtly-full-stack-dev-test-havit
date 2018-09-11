@@ -21,12 +21,18 @@ export const loadUsersSuccess = ({ users }) => {
 	};
 };
 
-export const saveUser = user => {
+export const saveUser = (user, history) => {
 	return (dispatch) => {
 		return userApi.saveUser(user)
 			.then(response => {
 				const action = response.error ? toggleErrorMessage : saveUserSuccess;
-				if (response.error) response.user = user;
+
+				if (response.error) {
+					response.user = user;
+				} else {
+					history.push(`/user/${response.user.id}`);
+				}
+
 				dispatch(action(response));
 			})
 			.catch(error => {

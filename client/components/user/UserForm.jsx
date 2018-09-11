@@ -29,7 +29,7 @@ class UserItem extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user !== this.props.user) {
+    if (nextProps.user !== this.props.user && !nextProps.error.isDisplayed && !this.props.error.isDisplayed) {
       let user;
       let isDisplayed;
       
@@ -44,8 +44,17 @@ class UserItem extends React.PureComponent {
       this.setState({
         user,
         isSaving: false,
-        isDisplayed
+        isDisplayed,
+        validate: {}
       });
+    } else if (nextProps.error.isDisplayed && nextProps.error.isDisplayed !== this.props.error.isDisplayed) {
+      const { error } = nextProps.error;
+      if (/email/i.test(error)) {
+        const validate = { ...this.state.validate };
+        validate.emailState = danger;
+
+        this.setState({ validate, isSaving: false });
+      }
     }
   }
 
@@ -100,7 +109,7 @@ class UserItem extends React.PureComponent {
       if (params.id) {
         updateUser(this.state.user)
       } else {
-        saveUser(this.state.user)
+        saveUser(this.state.user, this.props.history)
       }
     }
   }
@@ -159,7 +168,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   return {
     users: state.users,
-    user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {}
+    user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {},
+    error: state.error
   };
 };
 
