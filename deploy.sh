@@ -7,6 +7,9 @@ node scripts/build.js
 echo "Copying files..."
 cp -rf build/* ./public
 
+# Copy .env file
+cp .env.prod .env
+
 # Where branch am I?
 CURRENT_BRANCH="$(git branch | grep \* | cut -d ' ' -f2)"
 

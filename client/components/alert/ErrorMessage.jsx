@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { toggleErrorMessage } from '../../actions/errorActions';
 
-const ErrorMessageStyle = { position: 'absolute', right: 0 }
+const errorMessageStyle = { position: 'absolute', right: 0, zIndex: 9 }
 
 class ErrorMessage extends React.PureComponent {
   onDismiss = () => {
@@ -16,7 +16,7 @@ class ErrorMessage extends React.PureComponent {
       <Alert color="danger"
         isOpen={this.props.isDisplayed}
         toggle={this.onDismiss}
-        style={ErrorMessageStyle}
+        style={errorMessageStyle}
       >
         {this.props.errorMessage}
       </Alert>

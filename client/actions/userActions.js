@@ -1,14 +1,19 @@
 import * as types from './actionTypes';
 import userApi from '../api/userApi';
 import { toggleErrorMessage } from './errorActions';
+import { toggleLoadingSpinner } from './loadingActions';
 
 export const loadUsers = () => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.getAllUsers()
 			.then(response => {
+				dispatch(toggleLoadingSpinner(false));
 				dispatch(loadUsersSuccess(response));
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};
@@ -23,6 +28,8 @@ export const loadUsersSuccess = ({ users }) => {
 
 export const saveUser = (user, history) => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.saveUser(user)
 			.then(response => {
 				const action = response.error ? toggleErrorMessage : saveUserSuccess;
@@ -34,8 +41,10 @@ export const saveUser = (user, history) => {
 				}
 
 				dispatch(action(response));
+				dispatch(toggleLoadingSpinner(false));
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};
@@ -50,11 +59,21 @@ export const saveUserSuccess = ({ user }) => {
 
 export const updateUser = user => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.updateUser(user)
 			.then(response => {
-				dispatch(updateUserSuccess(response));
+				const action = response.error ? toggleErrorMessage : updateUserSuccess;
+
+				if (response.error) {
+						response.user = user;
+				}
+
+				dispatch(action(response));
+				dispatch(toggleLoadingSpinner(false));
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};
@@ -69,15 +88,18 @@ export const updateUserSuccess = ({ user }) => {
 
 export const deleteUser = (user, history) => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.deleteUser(user)
 			.then(() => {
 				dispatch(deleteUserSuccess(user));
+				dispatch(toggleLoadingSpinner(false));
 
-				history.push('/');
-
+				if (history) history.push('/');
 				return;
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};
