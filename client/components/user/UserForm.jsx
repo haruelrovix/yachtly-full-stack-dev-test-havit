@@ -47,12 +47,12 @@ class UserItem extends React.PureComponent {
         validate: {}
       });
     } else if (nextProps.error.isDisplayed && nextProps.error.isDisplayed !== this.props.error.isDisplayed) {
-      const { error } = nextProps.error;
+      const { error, user } = nextProps.error;
       if (/email/i.test(error)) {
         const validate = { ...this.state.validate };
         validate.emailState = danger;
 
-        this.setState({ validate });
+        this.setState({ validate, user });
       }
     }
   }
