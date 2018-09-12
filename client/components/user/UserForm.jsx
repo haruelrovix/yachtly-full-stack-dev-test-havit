@@ -6,8 +6,9 @@ import { bindActionCreators } from 'redux';
 
 import * as userActions from '../../actions/userActions';
 import { toggleModal } from '../../actions/modalActions';
-import User from './user';
+import LoadingSpinner from '../loading/LoadingSpinner';
 import InputForm from '../input/InputForm';
+import User from './user';
 import style from './style';
 
 const name = 'name';
@@ -23,7 +24,6 @@ class UserItem extends React.PureComponent {
     this.state = {
       user: new User(props.user),
       isDisplayed: !!props.match.params.id,
-      isSaving: false,
       validate : {}
     }
   }
@@ -43,7 +43,6 @@ class UserItem extends React.PureComponent {
 
       this.setState({
         user,
-        isSaving: false,
         isDisplayed,
         validate: {}
       });
@@ -53,7 +52,7 @@ class UserItem extends React.PureComponent {
         const validate = { ...this.state.validate };
         validate.emailState = danger;
 
-        this.setState({ validate, isSaving: false });
+        this.setState({ validate });
       }
     }
   }
@@ -103,8 +102,6 @@ class UserItem extends React.PureComponent {
 
     // Submit form IF it has no field error
     if (!hasDanger) {
-      this.setState({ isSaving: true });
-
       const { actions: { saveUser, updateUser }, match: { params } } = this.props;
       if (params.id) {
         updateUser(this.state.user)
@@ -115,7 +112,8 @@ class UserItem extends React.PureComponent {
   }
 
   render() {
-    const { user, isSaving, isDisplayed, validate } = this.state;
+    const { user, isDisplayed, validate } = this.state;
+    const { isLoading } = this.props;
 
     return (
       <div className="container">
@@ -147,12 +145,13 @@ class UserItem extends React.PureComponent {
               <InputForm label="Phone Number" name="phoneNumber" user={user} handleOnChange={this.handleOnChange} />
               <InputForm label="Address" name="address" user={user} handleOnChange={this.handleOnChange} />
               <FormGroup>
-                {isSaving ? 'Saving...' : <Button color="primary" size="sm" onClick={this.saveUser} style={style.button}>Save</Button>}
-                {isDisplayed && <Button color="primary" size="sm" onClick={this.showModal} style={style.button}>Delete</Button>}
+                <Button color="primary" size="sm" onClick={this.saveUser} style={style.button} disabled={isLoading}>Save</Button>
+                {isDisplayed && <Button color="primary" size="sm" onClick={this.showModal} style={style.button} disabled={isLoading}>Delete</Button>}
               </FormGroup>
             </Form>
           </div>
         </div>
+        <LoadingSpinner isLoading={isLoading} />
       </div>
     );
   }
@@ -169,6 +168,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     users: state.users,
     user: state.users.find(user => user.id === Number(ownProps.match.params.id)) || {},
+    isLoading: state.loading.isDisplayed,
     error: state.error
   };
 };

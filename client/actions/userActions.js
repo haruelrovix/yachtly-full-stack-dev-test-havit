@@ -28,6 +28,8 @@ export const loadUsersSuccess = ({ users }) => {
 
 export const saveUser = (user, history) => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.saveUser(user)
 			.then(response => {
 				const action = response.error ? toggleErrorMessage : saveUserSuccess;
@@ -39,8 +41,10 @@ export const saveUser = (user, history) => {
 				}
 
 				dispatch(action(response));
+				dispatch(toggleLoadingSpinner(false));
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};
@@ -55,6 +59,8 @@ export const saveUserSuccess = ({ user }) => {
 
 export const updateUser = user => {
 	return (dispatch) => {
+		dispatch(toggleLoadingSpinner(true));
+
 		return userApi.updateUser(user)
 			.then(response => {
 				const action = response.error ? toggleErrorMessage : updateUserSuccess;
@@ -64,8 +70,10 @@ export const updateUser = user => {
 				}
 
 				dispatch(action(response));
+				dispatch(toggleLoadingSpinner(false));
 			})
 			.catch(error => {
+				dispatch(toggleLoadingSpinner(false));
 				throw(error);
 			});
 	};

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
-import UserItem from './UserItem';
 import { PulseLoader } from 'react-spinners';
+import UserItem from './UserItem';
 
 const loaderStyle = { textAlign: 'center' };
 
